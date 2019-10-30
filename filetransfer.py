@@ -1,6 +1,8 @@
 import socket
 import os
 import sys
+
+
 def receive_file(s, receiveTo):
     fileName = s.recv(1024).decode()
     filePath = r"./"+receiveTo+"/"+fileName
@@ -16,7 +18,7 @@ def receive_file(s, receiveTo):
         f.write(data)
     f.close()
     print("[+] Download complete!")
-    print("[+]Successfully Received: "+ fileName)
+    print("[+]Successfully Received: " + fileName)
 
 
 def send_file(s, fileName, sendFrom):
@@ -30,10 +32,10 @@ def send_file(s, fileName, sendFrom):
         print("[+] Sending file...")
         data = f.read()
         s.sendall(data)
-        print("[+]Successfully Sent: "+ fileName)
+        print("[+]Successfully Sent: " + fileName)
 
 
 def list_dir():
     files_array = os.listdir("./server/")
-    for file in files_array: 
+    for file in files_array:
         print(file)
