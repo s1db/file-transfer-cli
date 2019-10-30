@@ -3,7 +3,6 @@ import os
 import sys
 def receive_file(s, receiveTo):
     fileName = s.recv(1024).decode()
-    print(fileName)
     filePath = r"./"+receiveTo+"/"+fileName
     print("path where will be save: "+filePath)
     f = open(filePath, "wb")

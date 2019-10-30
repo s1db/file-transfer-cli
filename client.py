@@ -16,14 +16,15 @@ except Exception as e:
 	exit(1)
 print("[+] Established Connection with Server")
 if(REQUEST_TYPE=="get"):
-    s.sendall("put\n".encode('utf-8'))
-    s.sendall(str(sys.argv[4]).encode('utf-8'))
+    s.sendall("put".encode('utf-8'))
+    fileName = str(sys.argv[4]).encode('utf-8')
+    s.sendall(fileName)
     receive_file(s, "client")
 elif(REQUEST_TYPE=="put"):
-    s.sendall("get\n".encode('utf-8'))
+    s.sendall("get".encode('utf-8'))
     fileName = str(sys.argv[4])
     send_file(s, fileName, "client")
-elif(REQUEST_TYPE=="list\n"):
+elif(REQUEST_TYPE=="list"):
     s.sendall(REQUEST_TYPE.encode('utf-8'))
     list_dir()
 else:
