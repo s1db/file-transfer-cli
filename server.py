@@ -1,16 +1,34 @@
+'''
+TODO:
+- []
+'''
 import socket
 import sys
 import os
-'''
-A “server” that receives and serves client requests for 
-files stored in a local directory.
-'''
+from filetransfer import *
+
+
+HOST = "127.0.0.1"
+PORT = 7213
+
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.bind((socket.gethostname(), 1234))
-s.listen(5)
+try:
+    s.bind((HOST, PORT))
+    s.listen(5)
+except Exception as e:
+	# Print the exception message
+	print(e)
+	# Exit with a non-zero value, to indicate an error condition
+	exit(1)
+print("Listening ...")
 
 while True:
-    clientsocket, address = s.accept()
-    print(f"Connection from {address} has been established!")
-    clientsocket.send(bytes("welcome to the server", "utf-8"))
-    clientsocket.close()
+    s, addr = s.accept()
+    print("[+] Client connected: ", addr)
+
+    send_file(s, "shit.txt", "server")
+ #   receive_file(s, "server")
+    # close connection
+    s.close()
+    print("[-] Client disconnected")
+    sys.exit(0)
