@@ -16,20 +16,32 @@ except Exception as e:
     # Exit with a non-zero value, to indicate an error condition
     exit(1)
 print("[+] Established Connection with Server")
+FILES_ON_SERVER = receive_listing(s, "client")
+FILES_ON_CLIENT = os.listdir(r"./client")
 if(REQUEST_TYPE == "get"):
-    s.sendall("put".encode('utf-8'))
-    fileName = sys.argv[4].encode('utf-8')
-    time.sleep(1)
-    s.sendall(fileName)
-    receive_file(s, "client")
+    fileName = sys.argv[4]
+    if(fileName in FILES_ON_SERVER):
+        s.sendall("put".encode('utf-8'))
+        time.sleep(1)
+        s.sendall(fileName.encode('utf-8'))
+        receive_file(s, "client")
+    else:
+        print("[-] File Not on Server")
 elif(REQUEST_TYPE == "put"):
-    s.sendall("get".encode('utf-8'))
     fileName = str(sys.argv[4])
-    time.sleep(1)
-    send_file(s, fileName, "client")
+    if(fileName in FILES_ON_SERVER):
+        print("[-] File already exists on Server.")
+    elif(fileName not in FILES_ON_CLIENT):
+        print("[-] File not in client directory.")
+    else:
+        s.sendall("get".encode('utf-8'))
+        time.sleep(1)
+        send_file(s, fileName, "client")
 elif(REQUEST_TYPE == "list"):
-    s.sendall(REQUEST_TYPE.encode('utf-8'))
-    list_dir()
+    print("[+] Files of Server")
+    for files in FILES_ON_SERVER:
+        print("   [+] "+files)
+
 else:
     print("[!] Invalid Reqest")
 s.close()
