@@ -22,7 +22,7 @@ if(REQUEST_TYPE == "get"):
     fileName = sys.argv[4]
     if(fileName in FILES_ON_SERVER):
         s.sendall("put".encode('utf-8'))
-        time.sleep(1)
+        print("[+] Requesting server get "+fileName)
         s.sendall(fileName.encode('utf-8'))
         receive_file(s, "client")
     else:
@@ -35,7 +35,7 @@ elif(REQUEST_TYPE == "put"):
         print("[-] File not in client directory.")
     else:
         s.sendall("get".encode('utf-8'))
-        time.sleep(1)
+        print("[+] Requesting server to accept file.")
         send_file(s, fileName, "client")
 elif(REQUEST_TYPE == "list"):
     print("[+] Files of Server")
@@ -43,7 +43,7 @@ elif(REQUEST_TYPE == "list"):
         print("   [+] "+files)
 
 else:
-    print("[!] Invalid Reqest")
+    print("[!] Invalid Request")
 s.close()
 print("[-] Disconnected")
 sys.exit(0)

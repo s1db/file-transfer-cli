@@ -1,36 +1,13 @@
 import socket
 import os
 import sys
-'''
-TODO:
-[] Write a receive all function to check if all packets have been received.
-[] Sending the directory, send individually.
-'''
-
-def receive_file(s, receiveTo):
-    fileName = s.recv(1024).decode()
-    filePath = r"./"+receiveTo+"/"+fileName
-    try:
-        print("[+] Attempting to download file: " + fileName)
-        f = open(filePath, "wb")
-        while True:
-            data = s.recv(4096)
-            if not data:
-                break
-            f.write(data)
-        f.close()    
-        print("[+] Successfully Received: " + fileName)
-    except Exception as e:
-        print(e)
-        exit(1)
-
-#def receive_all(s)
 
 def send_file(s, fileName, sendFrom):
     # get file name to send
     try:
-        s.sendall(fileName.encode('utf-8'))
         filePath = r"./"+sendFrom+"/"+fileName
+        s.sendall(str(os.path.getsize(filePath)).encode('utf-8'))
+        s.sendall(fileName.encode('utf-8'))
         # open file
         with open(filePath, "rb") as f:
             # send file
@@ -39,6 +16,34 @@ def send_file(s, fileName, sendFrom):
             s.sendall(data)
             print("[+] Successfully Sent: " + fileName)
     except Exception as e:
+        print("[!] Unable to send file. Refer to the following error:")
+        print(e)
+        exit(1)
+
+def receive_file(s, receiveTo):
+    fileLength = int(s.recv(512).decode())
+    fileName = s.recv(1024).decode()
+    filePath = r"./"+receiveTo+"/"+fileName
+    try:
+        print("[+] Attempting to download file: " + fileName)
+        f = open(filePath, "wb")
+        while fileLength>0:
+            data = s.recv(4096)
+            if not data:
+                if fileLength >0:
+                    print("[!] Unsuccessful Download.")
+                    os.remove(filePath)
+                break
+            f.write(data)
+            fileLength-=4096
+        f.close()    
+        print("[+] Successfully Received: " + fileName)
+    except Exception as e:
+        try:
+            os.remove(filePath)
+        except:
+            pass
+        print("[!] Unable to receive file. Refer to the following error:")
         print(e)
         exit(1)
 
