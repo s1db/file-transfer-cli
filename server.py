@@ -12,9 +12,7 @@ try:
     s.bind((HOST, PORT))
     s.listen(5)
 except Exception as e:
-    # Print the exception message
     print(e)
-    # Exit with a non-zero value, to indicate an error condition
     exit(1)
 print("[+] Listening for connection requests.")
 
@@ -28,7 +26,7 @@ while True:
         receive_file(s, "server")
     elif(REQUEST_TYPE == "put"):
         fileName = s.recv(1024).decode()
-        print(fileName)
+        print("[+] Sending: "+str(fileName))
         send_file(s, fileName, "server")
     elif(REQUEST_TYPE == "list"):
         send_listing(s, "server")

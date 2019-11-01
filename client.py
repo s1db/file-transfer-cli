@@ -1,7 +1,6 @@
 import socket
 import sys
 from filetransfer import *
-import time
 
 HOST = str(sys.argv[1])
 PORT = int(sys.argv[2])
@@ -11,9 +10,7 @@ s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 try:
     s.connect((HOST, PORT))
 except Exception as e:
-    # Print the exception message
     print(e)
-    # Exit with a non-zero value, to indicate an error condition
     exit(1)
 print("[+] Established Connection with Server")
 FILES_ON_SERVER = receive_listing(s, "client")

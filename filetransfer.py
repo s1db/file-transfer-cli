@@ -21,10 +21,10 @@ def send_file(s, fileName, sendFrom):
         exit(1)
 
 def receive_file(s, receiveTo):
-    fileLength = int(s.recv(512).decode())
-    fileName = s.recv(1024).decode()
-    filePath = r"./"+receiveTo+"/"+fileName
     try:
+        fileLength = int(s.recv(512).decode())
+        fileName = s.recv(1024).decode()
+        filePath = r"./"+receiveTo+"/"+fileName
         print("[+] Attempting to download file: " + fileName)
         f = open(filePath, "wb")
         while fileLength>0:
@@ -32,6 +32,7 @@ def receive_file(s, receiveTo):
             if not data:
                 if fileLength >0:
                     print("[!] Unsuccessful Download.")
+                    f.close()
                     os.remove(filePath)
                 break
             f.write(data)
@@ -40,6 +41,7 @@ def receive_file(s, receiveTo):
         print("[+] Successfully Received: " + fileName)
     except Exception as e:
         try:
+            f.close()
             os.remove(filePath)
         except:
             pass
